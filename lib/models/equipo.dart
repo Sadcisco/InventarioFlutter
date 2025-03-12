@@ -3,23 +3,44 @@ class Equipo {
   final String tipo;
   final String modelo;
   final String serial;
-  final String? fechaRegistro;
+  final int sucursalId;
+  final int usuarioId;
+  final String fechaRegistro;
 
+  // Constructor
   Equipo({
     required this.id,
     required this.tipo,
     required this.modelo,
     required this.serial,
-    this.fechaRegistro,
+    required this.sucursalId,
+    required this.usuarioId,
+    required this.fechaRegistro,
   });
 
+  // Método para convertir un mapa JSON a un objeto Equipo
   factory Equipo.fromJson(Map<String, dynamic> json) {
     return Equipo(
       id: json['id'],
       tipo: json['tipo'],
       modelo: json['modelo'],
       serial: json['serial'],
-      fechaRegistro: json['fecha_registro'],  // Importante que el nombre coincida con el de la API
+      sucursalId: json['sucursal_id'], // Nuevo campo
+      usuarioId: json['usuario_id'],   // Nuevo campo
+      fechaRegistro: json['fecha_registro'],
     );
+  }
+
+  // Método para convertir un objeto Equipo a JSON
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'tipo': tipo,
+      'modelo': modelo,
+      'serial': serial,
+      'sucursal_id': sucursalId, // Nuevo campo
+      'usuario_id': usuarioId,   // Nuevo campo
+      'fecha_registro': fechaRegistro,
+    };
   }
 }

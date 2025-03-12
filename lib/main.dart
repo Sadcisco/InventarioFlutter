@@ -1,21 +1,35 @@
 import 'package:flutter/material.dart';
 import 'screens/home_screen.dart';
-import 'screens/login_screen.dart';  // Agrega esta importación
+import 'screens/login_screen.dart';
+import 'screens/edit_equipo_screen.dart' as edit_equipo;
+import 'models/equipo.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Inventario App',
-      initialRoute: '/',  // El login es la pantalla inicial
+      initialRoute: '/',
       routes: {
-        '/': (context) => LoginScreen(),
-        '/home': (context) => HomeScreen(),
+        '/': (context) => const HomeScreen(),
+        '/login': (context) => const LoginScreen(),
+      },
+      onGenerateRoute: (settings) {
+        if (settings.name == '/edit_equipo') {
+          final args = settings.arguments;
+          if (args is Equipo) {
+            return MaterialPageRoute(
+              builder: (context) => edit_equipo.EditEquipoScreen(equipo: args),
+            );
+          }
+        }
+        return null;
       },
     );
   }

@@ -4,6 +4,8 @@ import '../screens/add_equipo_screen.dart';
 import '../screens/login_screen.dart';
 
 class CustomDrawer extends StatelessWidget {
+  const CustomDrawer({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -18,26 +20,6 @@ class CustomDrawer extends StatelessWidget {
                 Text('Menú', style: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold)),
               ],
             ),
-          ),
-          ListTile(
-            leading: Icon(Icons.home),
-            title: Text('Inicio'),
-            onTap: () {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => HomeScreen()),
-              );
-            },
-          ),
-          ListTile(
-            leading: Icon(Icons.add),
-            title: Text('Agregar Equipo'),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => AddEquipoScreen()),
-              );
-            },
           ),
           ListTile(
             leading: Icon(Icons.exit_to_app),
