@@ -17,7 +17,7 @@ class _HomeScreenState extends State<HomeScreen> {
   List<Equipo> equiposFiltrados = [];
   Equipo? equipoSeleccionado;
 
-  TextEditingController filtroController = TextEditingController();
+  final TextEditingController filtroController = TextEditingController();
   bool isLoggedIn = false;
 
   @override
@@ -27,6 +27,7 @@ class _HomeScreenState extends State<HomeScreen> {
     fetchEquipos();
   }
 
+  // Verificar si el usuario está logueado
   void checkSession() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
@@ -40,6 +41,7 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  // Cerrar sesión
   void logout() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('isLoggedIn', false);
@@ -49,6 +51,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  // Obtener la lista de equipos desde la API
   Future<void> fetchEquipos() async {
     try {
       final data = await ApiService.getEquipos();
@@ -61,6 +64,7 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  // Filtrar la lista de equipos
   void filtrarBusqueda(String texto) {
     setState(() {
       equiposFiltrados = equipos.where((equipo) {
@@ -72,14 +76,15 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  // Mostrar diálogo para agregar un nuevo equipo
   void mostrarAgregarEquipoDialog() {
     final _formKey = GlobalKey<FormState>();
-    final TextEditingController tipoController = TextEditingController();
-    final TextEditingController modeloController = TextEditingController();
-    final TextEditingController serialController = TextEditingController();
-    final TextEditingController sucursalController = TextEditingController();
-    final TextEditingController usuarioController = TextEditingController();
-    final TextEditingController fechaRegistroController = TextEditingController();
+    final tipoController = TextEditingController();
+    final modeloController = TextEditingController();
+    final serialController = TextEditingController();
+    final sucursalController = TextEditingController();
+    final usuarioController = TextEditingController();
+    final fechaRegistroController = TextEditingController();
 
     showDialog(
       context: context,
@@ -103,7 +108,10 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           actions: [
-            TextButton(child: const Text("Cancelar"), onPressed: () => Navigator.pop(context)),
+            TextButton(
+              child: const Text("Cancelar"),
+              onPressed: () => Navigator.pop(context),
+            ),
             ElevatedButton(
               child: const Text("Guardar"),
               onPressed: () async {
@@ -132,6 +140,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Inventario'),
@@ -143,22 +154,23 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
-      drawer: CustomDrawer(),
+      drawer: const CustomDrawer(),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Barra de búsqueda y filtros
             Row(
               children: [
                 SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.4,
+                  width: screenWidth * 0.6,
                   child: TextField(
                     controller: filtroController,
                     onChanged: filtrarBusqueda,
                     decoration: InputDecoration(
                       labelText: 'Buscar...',
-                      border: OutlineInputBorder(),
+                      border: const OutlineInputBorder(),
                       filled: true,
                       fillColor: Colors.grey[200],
                     ),
@@ -167,16 +179,22 @@ class _HomeScreenState extends State<HomeScreen> {
                 const SizedBox(width: 8),
                 ElevatedButton(
                   onPressed: () {}, // Filtro aún sin implementar
-                  style: ElevatedButton.styleFrom(backgroundColor: Colors.purple[200], foregroundColor: Colors.black),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.purple[200],
+                    foregroundColor: Colors.black,
+                  ),
                   child: const Text("Filtros"),
                 ),
               ],
             ),
             const SizedBox(height: 16),
+
+            // Tabla de equipos y detalles
             Expanded(
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // Tabla de equipos
                   Expanded(
                     flex: 3,
                     child: SingleChildScrollView(
@@ -211,6 +229,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                   const SizedBox(width: 16),
+
+                  // Detalles del equipo seleccionado
                   if (equipoSeleccionado != null)
                     Expanded(
                       flex: 2,
@@ -221,7 +241,10 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text('DETALLE DEL EQUIPO', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                              const Text(
+                                'DETALLE DEL EQUIPO',
+                                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                              ),
                               const Divider(),
                               Text('Tipo: ${equipoSeleccionado!.tipo}'),
                               Text('Modelo: ${equipoSeleccionado!.modelo}'),
@@ -259,7 +282,11 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(onPressed: mostrarAgregarEquipoDialog, backgroundColor: Colors.green.shade700, child: const Icon(Icons.add)),
+      floatingActionButton: FloatingActionButton(
+        onPressed: mostrarAgregarEquipoDialog,
+        backgroundColor: Colors.green.shade700,
+        child: const Icon(Icons.add),
+      ),
     );
   }
 }
